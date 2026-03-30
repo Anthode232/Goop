@@ -1,6 +1,6 @@
 # Goop
 
-![Go Report Card](https://goreportcard.com/badge/github.com/ez0000001000000/Goop)](https://goreportcard.com/report/github.com/ez0000001000000/Goop)
+![Go Report Card](https://goreportcard.com/badge/github.com/ez0000001000000/Goop)
 
 **Web Scraper in Go with BeautifulSoup-like API**
 

@@ -10,6 +10,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"strings"
+	"time"
 
 	"golang.org/x/net/html/charset"
 )
@@ -37,6 +38,11 @@ func Cookie(n string, v string) {
 
 // GetWithClient returns the HTML returned by the url using a provided HTTP client
 func GetWithClient(url string, client *http.Client) (string, error) {
+	timer := startTimer("HTTP GET: "+url, DebugVerbose)
+	defer timer.finish()
+
+	logHTTPRequest("GET", url, Headers)
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		if debug {
@@ -56,6 +62,9 @@ func GetWithClient(url string, client *http.Client) (string, error) {
 		return "", newError(ErrInGetRequest, "couldn't perform GET request to "+url)
 	}
 	defer resp.Body.Close()
+
+	logHTTPResponse(resp.StatusCode, int(resp.ContentLength))
+
 	utf8Body, err := charset.NewReader(resp.Body, resp.Header.Get("Content-Type"))
 	if err != nil {
 		return "", err
@@ -117,6 +126,11 @@ func getBodyReader(rawBody interface{}) (io.Reader, error) {
 // PostWithClient returns the HTML returned by the url using a provided HTTP client
 // The type of the body must conform to one of the types listed in func getBodyReader()
 func PostWithClient(url string, bodyType string, body interface{}, client *http.Client) (string, error) {
+	timer := startTimer("HTTP POST: "+url, DebugVerbose)
+	defer timer.finish()
+
+	logHTTPRequest("POST", url, Headers)
+
 	bodyReader, err := getBodyReader(body)
 	if err != nil {
 		return "todo:", err
@@ -145,6 +159,9 @@ func PostWithClient(url string, bodyType string, body interface{}, client *http.
 		return "", newError(ErrCreatingPostRequest, "couldn't perform POST request to "+url)
 	}
 	defer resp.Body.Close()
+
+	logHTTPResponse(resp.StatusCode, int(resp.ContentLength))
+
 	bytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		if debug {
@@ -155,17 +172,42 @@ func PostWithClient(url string, bodyType string, body interface{}, client *http.
 	return string(bytes), nil
 }
 
+// Get returns the HTML returned by the url as a string using the default HTTP client
+func Get(url string) (string, error) {
+	client := &http.Client{
+		Timeout: DefaultTimeout,
+	}
+	return GetWithClient(url, client)
+}
+
+// GetWithTimeout returns the HTML returned by the url with a custom timeout
+func GetWithTimeout(url string, timeout time.Duration) (string, error) {
+	client := &http.Client{
+		Timeout: timeout,
+	}
+	return GetWithClient(url, client)
+}
+
+// PostWithTimeout returns the HTML returned by the url with a custom timeout
+func PostWithTimeout(url string, bodyType string, body interface{}, timeout time.Duration) (string, error) {
+	client := &http.Client{
+		Timeout: timeout,
+	}
+	return PostWithClient(url, bodyType, body, client)
+}
+
 // Post returns the HTML returned by the url as a string using the default HTTP client
 func Post(url string, bodyType string, body interface{}) (string, error) {
-	return PostWithClient(url, bodyType, body, defaultClient)
+	client := &http.Client{
+		Timeout: DefaultTimeout,
+	}
+	return PostWithClient(url, bodyType, body, client)
 }
 
 // PostForm is a convenience method for POST requests that
 func PostForm(url string, data url.Values) (string, error) {
-	return PostWithClient(url, "application/x-www-form-urlencoded", data, defaultClient)
-}
-
-// Get returns the HTML returned by the url as a string using the default HTTP client
-func Get(url string) (string, error) {
-	return GetWithClient(url, defaultClient)
+	client := &http.Client{
+		Timeout: DefaultTimeout,
+	}
+	return PostWithClient(url, "application/x-www-form-urlencoded", data, client)
 }

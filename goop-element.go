@@ -11,13 +11,18 @@ import (
 // with or without attribute key and value specified,
 // and returns a struct with a pointer to it
 func (r Root) Find(args ...string) Root {
+	timer := startTimer("Find: "+strings.Join(args, " "), DebugVerbose)
+	defer timer.finish()
+
 	temp, ok := findOnce(r.Pointer, args, false, false)
 	if ok == false {
+		logDOMOperation("Find", strings.Join(args, " "), 0)
 		if debug {
 			panic("Element `" + args[0] + "` with attributes `" + strings.Join(args[1:], " ") + "` not found")
 		}
 		return Root{Error: newError(ErrElementNotFound, fmt.Sprintf("element `%s` with attributes `%s` not found", args[0], strings.Join(args[1:], " ")))}
 	}
+	logDOMOperation("Find", strings.Join(args, " "), 1)
 	return Root{Pointer: temp, NodeValue: temp.Data}
 }
 
@@ -26,13 +31,18 @@ func (r Root) Find(args ...string) Root {
 // and returns an array of structs, each having
 // the respective pointers
 func (r Root) FindAll(args ...string) []Root {
+	timer := startTimer("FindAll: "+strings.Join(args, " "), DebugVerbose)
+	defer timer.finish()
+
 	temp := findAllofem(r.Pointer, args, false)
 	if len(temp) == 0 {
+		logDOMOperation("FindAll", strings.Join(args, " "), 0)
 		if debug {
 			panic("Element `" + args[0] + "` with attributes `" + strings.Join(args[1:], " ") + "` not found")
 		}
 		return []Root{}
 	}
+	logDOMOperation("FindAll", strings.Join(args, " "), len(temp))
 	pointers := make([]Root, 0, len(temp))
 	for i := 0; i < len(temp); i++ {
 		pointers = append(pointers, Root{Pointer: temp[i], NodeValue: temp[i].Data})

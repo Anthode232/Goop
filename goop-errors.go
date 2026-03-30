@@ -26,6 +26,8 @@ const (
 	ErrMarshallingPostRequest
 	// ErrReadingResponse will be returned if there was an error reading the response to our get request
 	ErrReadingResponse
+	// ErrTimeout will be returned when a request times out
+	ErrTimeout
 )
 
 // Error allows easier introspection on the type of error returned.
@@ -51,6 +53,13 @@ var debug = false
 // SetDebug sets the debug status
 // Setting this to true causes the panics to be thrown and logged onto the console.
 // Setting this to false causes the errors to be saved in the Error field in the returned struct.
+// DEPRECATED: Use SetDebugLevel instead for more granular control
 func SetDebug(d bool) {
 	debug = d
+	// Update debug level for backward compatibility
+	if d {
+		debugLevel = DebugBasic
+	} else {
+		debugLevel = DebugOff
+	}
 }

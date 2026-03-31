@@ -32,6 +32,9 @@ func Execute() error {
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	// Add cache command
+	rootCmd.AddCommand(CacheCmd)
+
 	// Global flags
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.goop.yaml)")
 	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "verbose output")

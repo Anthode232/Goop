@@ -1,10 +1,13 @@
 # Goop
 
 ![Go Report Card](https://goreportcard.com/badge/github.com/ez0000001000000/Goop)
+![GitHub stars](https://img.shields.io/github/stars/ez0000001000000/Goop?style=social)
 
 **Web Scraper in Go with BeautifulSoup-like API**
 
-*goop* is a small web scraper package for Go, with its interface highly similar to BeautifulSoup.
+*goop* is a powerful web scraper package for Go, with its interface highly similar to BeautifulSoup.
+
+## 🌟 If you like this project, please star it on GitHub! [⭐ Star This Project](https://github.com/ez0000001000000/Goop)
 
 ## Features
 
@@ -15,6 +18,7 @@
 - ⚡ **High-performance concurrent scraping (3-5x faster)**
 - 🌟 **JavaScript rendering for dynamic sites**
 - 🛠️ **Professional CLI tool with fast mode**
+- 💾 **Intelligent caching system** (memory + disk hybrid)
 - ⏱️ Configurable timeout controls for production use
 - 🔧 Enhanced debug mode with multiple verbosity levels
 - 📝 Text and HTML extraction
@@ -205,6 +209,61 @@ goop config set debug-level verbose
 - **Standard Mode**: ~45MB peak memory
 - **Fast Mode**: ~28MB peak memory (38% reduction)
 
+## Caching
+
+Goop includes a powerful hybrid caching system for improved performance:
+
+### Cache Configuration
+```go
+// Default caching (100MB memory, 500MB disk, 1 hour TTL)
+goop.SetCacheConfig(goop.DefaultCacheConfig)
+
+// Fast caching (200MB memory, 1GB disk, 30 min TTL)
+goop.SetCacheConfig(goop.FastCacheConfig)
+
+// Custom configuration
+config := goop.CacheConfig{
+    Enabled:     true,
+    MemoryLimit: 50 * 1024 * 1024,  // 50MB
+    DiskLimit:   200 * 1024 * 1024, // 200MB
+    DefaultTTL:  2 * time.Hour,
+    CacheDir:    ".my_cache",
+}
+goop.SetCacheConfig(config)
+```
+
+### Cache Usage
+```go
+// Automatic caching with Get() function
+html, err := goop.Get("https://example.com")
+
+// Bypass cache when needed
+html, err := goop.GetWithCache(url, timeout, true)
+
+// Cache statistics
+stats := goop.GetCacheStats()
+fmt.Printf("Hit rate: %.1f%%\n", 
+    float64(stats.MemoryHits+stats.DiskHits)/float64(stats.MemoryHits+stats.MemoryMisses+stats.DiskHits+stats.DiskMisses)*100)
+
+// Clear cache
+err := goop.ClearCache()
+```
+
+### CLI Cache Commands
+```bash
+# View cache statistics
+goop cache status
+
+# Clear all caches
+goop cache clear
+
+# Configure cache settings
+goop cache config enabled true
+goop cache config memory-limit 200
+goop cache config ttl 2h
+goop cache config cache-dir ./cache
+```
+
 ## Configuration
 
 ### Rate Limiting
@@ -301,13 +360,17 @@ if element.Error != nil {
 ## Roadmap
 
 ### Planned Features
+- [x] **Intelligent caching system** ✅ Implemented!
 - [ ] WebSocket support for real-time data
-- [ ] Proxy rotation support
+- [ ] Proxy rotation support  
 - [ ] Headless browser automation
 - [ ] XPath selector support
 - [ ] Database export (SQLite, PostgreSQL)
 - [ ] Distributed scraping cluster
 - [ ] Web UI for scraping management
+- [ ] API rate limiting per domain
+- [ ] Machine learning for anti-bot detection
+- [ ] Cloud-based caching service
 
 ## Project Structure
 

@@ -5,26 +5,14 @@ import (
 	"time"
 )
 
-// DebugLevel defines the verbosity of debug output
+// Debug levels for different verbosity levels
 type DebugLevel int
 
 const (
-	// DebugOff disables all debug output
-	DebugOff DebugLevel = iota
-	// DebugBasic shows basic error messages and operation status
-	DebugBasic
-	// DebugVerbose shows detailed operation logs and timing information
-	DebugVerbose
-	// DebugTrace shows full request/response tracing and DOM traversal details
-	DebugTrace
-)
-
-var (
-	// Current debug level
-	debugLevel = DebugOff
-
-	// Custom logger interface
-	debugLogger Logger = &defaultLogger{}
+	DebugOff     DebugLevel = 0
+	DebugBasic   DebugLevel = 1
+	DebugVerbose DebugLevel = 2
+	DebugTrace   DebugLevel = 3
 )
 
 // Logger interface for custom debug logging
@@ -32,6 +20,17 @@ type Logger interface {
 	Debugf(format string, args ...interface{})
 	Infof(format string, args ...interface{})
 	Tracef(format string, args ...interface{})
+}
+
+// Global debug configuration
+var (
+	debugLevel  DebugLevel = DebugOff
+	debugLogger Logger     = &defaultLogger{}
+)
+
+// Initialize cache with default config
+func init() {
+	SetCacheConfig(DefaultCacheConfig)
 }
 
 // defaultLogger implements Logger using standard log package
@@ -49,11 +48,9 @@ func (l *defaultLogger) Tracef(format string, args ...interface{}) {
 	log.Printf("[TRACE] "+format, args...)
 }
 
-// SetDebugLevel sets the debug verbosity level
+// SetDebugLevel sets debug verbosity level
 func SetDebugLevel(level DebugLevel) {
 	debugLevel = level
-	// Maintain backward compatibility with boolean debug mode
-	debug = (level != DebugOff)
 }
 
 // SetDebugLogger sets a custom logger for debug output
@@ -61,7 +58,7 @@ func SetDebugLogger(logger Logger) {
 	debugLogger = logger
 }
 
-// GetDebugLevel returns the current debug level
+// GetDebugLevel returns current debug level
 func GetDebugLevel() DebugLevel {
 	return debugLevel
 }
@@ -97,7 +94,7 @@ func startTimer(operation string, level DebugLevel) *operationTimer {
 	}
 }
 
-// finish ends timing and logs the duration
+// finish ends timing and logs duration
 func (t *operationTimer) finish() {
 	duration := time.Since(t.start)
 	debugLog(t.level, "Completed operation: %s (took %v)", t.operation, duration)

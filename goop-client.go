@@ -178,20 +178,72 @@ func PostWithClient(url string, bodyType string, body interface{}, client *http.
 	return string(bytes), nil
 }
 
-// Get returns the HTML returned by the url as a string using the default HTTP client
+// Get returns the HTML returned by the url as a string using caching
 func Get(url string) (string, error) {
-	client := &http.Client{
-		Timeout: DefaultTimeout,
-	}
-	return GetWithClient(url, client)
+	return GetWithCache(url, DefaultTimeout, false)
 }
 
-// GetWithTimeout returns the HTML returned by the url with a custom timeout
+// GetWithTimeout returns the HTML returned by the url with a custom timeout and caching
 func GetWithTimeout(url string, timeout time.Duration) (string, error) {
+	return GetWithCache(url, timeout, false)
+}
+
+// GetWithCache returns HTML with caching support
+func GetWithCache(url string, timeout time.Duration, bypassCache bool) (string, error) {
 	client := &http.Client{
 		Timeout: timeout,
 	}
-	return GetWithClient(url, client)
+	return GetWithClientAndCache(url, client, bypassCache)
+}
+
+// GetWithClientAndCache performs HTTP request with caching
+func GetWithClientAndCache(url string, client *http.Client, bypassCache bool) (string, error) {
+	// Check cache first (unless bypassed)
+	if !bypassCache && globalCache != nil {
+		cacheKey := generateCacheKey(url, "GET", Headers)
+		if entry, found := globalCache.Get(cacheKey); found {
+			if debugLevel >= DebugVerbose {
+				fmt.Printf("Cache HIT: %s\n", url)
+			}
+			return entry.Content, nil
+		}
+
+		if debugLevel >= DebugVerbose {
+			fmt.Printf("Cache MISS: %s\n", url)
+		}
+	}
+
+	// Perform actual HTTP request
+	resp, err := GetWithClient(url, client)
+	if err != nil {
+		return "", err
+	}
+
+	// Cache the response
+	if !bypassCache && globalCache != nil && err == nil {
+		cacheKey := generateCacheKey(url, "GET", Headers)
+		entry := &CacheEntry{
+			Key:       cacheKey,
+			Content:   resp,
+			Headers:   headersToString(Headers),
+			Timestamp: time.Now(),
+			TTL:       cacheConfig.DefaultTTL,
+			Size:      int64(len(resp)),
+		}
+		globalCache.Set(cacheKey, entry)
+	}
+
+	return resp, nil
+}
+
+// headersToString converts headers map to string for storage
+func headersToString(headers map[string]string) string {
+	if len(headers) == 0 {
+		return ""
+	}
+
+	data, _ := json.Marshal(headers)
+	return string(data)
 }
 
 // PostWithTimeout returns the HTML returned by the url with a custom timeout

@@ -1,0 +1,38 @@
+Tag,Text,HTML,Attributes,Children
+html,,"<html><head><title>Test Page</title></head>   <body>    <div class=""container"" id=""main"">     <h1>Test Header</h1>     <p class=""intro"">Introduction paragraph</p>     <ul>      <li>Item 1</li>      <li>Item 2</li>     </ul>    </div>       </body></html>",,3
+head,,<head><title>Test Page</title></head>,,1
+title,Test Page,<title>Test Page</title>,,1
+Test Page,,Test Page,,0
+"
+		",,"   ",,0
+body,,"<body>    <div class=""container"" id=""main"">     <h1>Test Header</h1>     <p class=""intro"">Introduction paragraph</p>     <ul>      <li>Item 1</li>      <li>Item 2</li>     </ul>    </div>       </body>",,3
+"
+			",,"    ",,0
+div,,"<div class=""container"" id=""main"">     <h1>Test Header</h1>     <p class=""intro"">Introduction paragraph</p>     <ul>      <li>Item 1</li>      <li>Item 2</li>     </ul>    </div>",class=container; id=main,7
+"
+				",,"     ",,0
+h1,Test Header,<h1>Test Header</h1>,,1
+Test Header,,Test Header,,0
+"
+				",,"     ",,0
+p,Introduction paragraph,"<p class=""intro"">Introduction paragraph</p>",class=intro,1
+Introduction paragraph,,Introduction paragraph,,0
+"
+				",,"     ",,0
+ul,,<ul>      <li>Item 1</li>      <li>Item 2</li>     </ul>,,5
+"
+					",,"      ",,0
+li,Item 1,<li>Item 1</li>,,1
+Item 1,,Item 1,,0
+"
+					",,"      ",,0
+li,Item 2,<li>Item 2</li>,,1
+Item 2,,Item 2,,0
+"
+				",,"     ",,0
+"
+			",,"    ",,0
+"
+		
+	
+	",,"       ",,0

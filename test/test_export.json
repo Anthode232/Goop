@@ -1,0 +1,184 @@
+{
+  "elements": [
+    {
+      "tag": "html",
+      "text": "",
+      "html": "\u003chtml\u003e\u003chead\u003e\u003ctitle\u003eTest Page\u003c/title\u003e\u003c/head\u003e\n\t\t\u003cbody\u003e\n\t\t\t\u003cdiv class=\"container\" id=\"main\"\u003e\n\t\t\t\t\u003ch1\u003eTest Header\u003c/h1\u003e\n\t\t\t\t\u003cp class=\"intro\"\u003eIntroduction paragraph\u003c/p\u003e\n\t\t\t\t\u003cul\u003e\n\t\t\t\t\t\u003cli\u003eItem 1\u003c/li\u003e\n\t\t\t\t\t\u003cli\u003eItem 2\u003c/li\u003e\n\t\t\t\t\u003c/ul\u003e\n\t\t\t\u003c/div\u003e\n\t\t\n\t\n\t\u003c/body\u003e\u003c/html\u003e",
+      "attributes": null,
+      "children_count": 3
+    },
+    {
+      "tag": "head",
+      "text": "",
+      "html": "\u003chead\u003e\u003ctitle\u003eTest Page\u003c/title\u003e\u003c/head\u003e",
+      "attributes": null,
+      "children_count": 1
+    },
+    {
+      "tag": "title",
+      "text": "Test Page",
+      "html": "\u003ctitle\u003eTest Page\u003c/title\u003e",
+      "attributes": null,
+      "children_count": 1
+    },
+    {
+      "tag": "Test Page",
+      "text": "",
+      "html": "Test Page",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "\n\t\t",
+      "text": "",
+      "html": "\n\t\t",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "body",
+      "text": "",
+      "html": "\u003cbody\u003e\n\t\t\t\u003cdiv class=\"container\" id=\"main\"\u003e\n\t\t\t\t\u003ch1\u003eTest Header\u003c/h1\u003e\n\t\t\t\t\u003cp class=\"intro\"\u003eIntroduction paragraph\u003c/p\u003e\n\t\t\t\t\u003cul\u003e\n\t\t\t\t\t\u003cli\u003eItem 1\u003c/li\u003e\n\t\t\t\t\t\u003cli\u003eItem 2\u003c/li\u003e\n\t\t\t\t\u003c/ul\u003e\n\t\t\t\u003c/div\u003e\n\t\t\n\t\n\t\u003c/body\u003e",
+      "attributes": null,
+      "children_count": 3
+    },
+    {
+      "tag": "\n\t\t\t",
+      "text": "",
+      "html": "\n\t\t\t",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "div",
+      "text": "",
+      "html": "\u003cdiv class=\"container\" id=\"main\"\u003e\n\t\t\t\t\u003ch1\u003eTest Header\u003c/h1\u003e\n\t\t\t\t\u003cp class=\"intro\"\u003eIntroduction paragraph\u003c/p\u003e\n\t\t\t\t\u003cul\u003e\n\t\t\t\t\t\u003cli\u003eItem 1\u003c/li\u003e\n\t\t\t\t\t\u003cli\u003eItem 2\u003c/li\u003e\n\t\t\t\t\u003c/ul\u003e\n\t\t\t\u003c/div\u003e",
+      "attributes": {
+        "class": "container",
+        "id": "main"
+      },
+      "children_count": 7
+    },
+    {
+      "tag": "\n\t\t\t\t",
+      "text": "",
+      "html": "\n\t\t\t\t",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "h1",
+      "text": "Test Header",
+      "html": "\u003ch1\u003eTest Header\u003c/h1\u003e",
+      "attributes": null,
+      "children_count": 1
+    },
+    {
+      "tag": "Test Header",
+      "text": "",
+      "html": "Test Header",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "\n\t\t\t\t",
+      "text": "",
+      "html": "\n\t\t\t\t",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "p",
+      "text": "Introduction paragraph",
+      "html": "\u003cp class=\"intro\"\u003eIntroduction paragraph\u003c/p\u003e",
+      "attributes": {
+        "class": "intro"
+      },
+      "children_count": 1
+    },
+    {
+      "tag": "Introduction paragraph",
+      "text": "",
+      "html": "Introduction paragraph",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "\n\t\t\t\t",
+      "text": "",
+      "html": "\n\t\t\t\t",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "ul",
+      "text": "",
+      "html": "\u003cul\u003e\n\t\t\t\t\t\u003cli\u003eItem 1\u003c/li\u003e\n\t\t\t\t\t\u003cli\u003eItem 2\u003c/li\u003e\n\t\t\t\t\u003c/ul\u003e",
+      "attributes": null,
+      "children_count": 5
+    },
+    {
+      "tag": "\n\t\t\t\t\t",
+      "text": "",
+      "html": "\n\t\t\t\t\t",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "li",
+      "text": "Item 1",
+      "html": "\u003cli\u003eItem 1\u003c/li\u003e",
+      "attributes": null,
+      "children_count": 1
+    },
+    {
+      "tag": "Item 1",
+      "text": "",
+      "html": "Item 1",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "\n\t\t\t\t\t",
+      "text": "",
+      "html": "\n\t\t\t\t\t",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "li",
+      "text": "Item 2",
+      "html": "\u003cli\u003eItem 2\u003c/li\u003e",
+      "attributes": null,
+      "children_count": 1
+    },
+    {
+      "tag": "Item 2",
+      "text": "",
+      "html": "Item 2",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "\n\t\t\t\t",
+      "text": "",
+      "html": "\n\t\t\t\t",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "\n\t\t\t",
+      "text": "",
+      "html": "\n\t\t\t",
+      "attributes": null,
+      "children_count": 0
+    },
+    {
+      "tag": "\n\t\t\n\t\n\t",
+      "text": "",
+      "html": "\n\t\t\n\t\n\t",
+      "attributes": null,
+      "children_count": 0
+    }
+  ]
+}

@@ -41,6 +41,9 @@ func GetWithClient(url string, client *http.Client) (string, error) {
 	timer := startTimer("HTTP GET: "+url, DebugVerbose)
 	defer timer.finish()
 
+	// Apply rate limiting
+	waitForRateLimit()
+
 	logHTTPRequest("GET", url, Headers)
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -129,6 +132,9 @@ func PostWithClient(url string, bodyType string, body interface{}, client *http.
 	timer := startTimer("HTTP POST: "+url, DebugVerbose)
 	defer timer.finish()
 
+	// Apply rate limiting
+	waitForRateLimit()
+
 	logHTTPRequest("POST", url, Headers)
 
 	bodyReader, err := getBodyReader(body)
@@ -210,4 +216,18 @@ func PostForm(url string, data url.Values) (string, error) {
 		Timeout: DefaultTimeout,
 	}
 	return PostWithClient(url, "application/x-www-form-urlencoded", data, client)
+}
+
+// Scrape fetches a URL and returns parsed HTML as a Root struct
+func Scrape(url string, timeout time.Duration) Root {
+	if timeout <= 0 {
+		timeout = DefaultTimeout
+	}
+
+	html, err := GetWithTimeout(url, timeout)
+	if err != nil {
+		return Root{Error: err}
+	}
+
+	return HTMLParse(html)
 }

@@ -12,10 +12,14 @@
 - 🌐 HTTP GET/POST support with custom headers and cookies
 - 🔍 Element finding by tag and attributes
 - 🎯 CSS Selector support (`.class`, `#id`, `[attr]`, `:pseudo`)
+- ⚡ **High-performance concurrent scraping (3-5x faster)**
+- 🌟 **JavaScript rendering for dynamic sites**
+- 🛠️ **Professional CLI tool with fast mode**
 - ⏱️ Configurable timeout controls for production use
 - 🔧 Enhanced debug mode with multiple verbosity levels
 - 📝 Text and HTML extraction
-- ⚡ Fast and lightweight
+- 📊 Multiple export formats (JSON, CSV, XML)
+- 🔄 Rate limiting and retry logic
 - 📦 Modular, well-organized codebase
 
 ## Installation

